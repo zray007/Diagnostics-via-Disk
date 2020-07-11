@@ -6,12 +6,19 @@
 
 * Linux machine with a CD/DVD/BluRay device. Raspberry Pi and a USB-to-IDE or USB-to-SATA plus external drive is fine.
 * CD/DVD/BluRay disk
-* Packages installed: `wodim` (provides `readom` command), `make`, `sed`, `gnuplot`
+* Dependencies: `readom`, `make`, `sed`, and `gnuplot`
 
-For example, on a Debian-based OS (including Ubuntu and Raspberry OS), you can install the prerequisites with:
-
+For a Debian-based OS (including Ubuntu and Raspberry OS), 
+package `wodim` provides `readom` command. You can install 
+these with:
 ```bash
 sudo apt-get update ; sudo apt-get install wodim make sed gnuplot-nox
+```
+
+For Arch Linux, `readom` is present under `cdrtools` package. 
+So, use this instead:
+```bash
+sudo pacman -Sy cdrtools make sed gnuplot
 ```
 
 ### Get data
