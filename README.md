@@ -1,35 +1,48 @@
 # Bio-ID
 
-## Software based quantitative analysis of disk based bio-assays
+## Scalable COVID testing on cheap commodity hardware: CD/DVD drives
 
 Work in progress!
 
-## Make a graph of C2 read errors from a CD/DVD
+## How to use
+
+* A graphical user interface.
+* A command-line interface is also available.
+
+All this is proof-of-concept level.  It works for us yet the performance might be bad with some specific hardware (CD readers) and there are conditions that we do not test (like no drive or several drives).
+
+## Graphical user interface
 
 ### Requirements
 
-* Linux machine with a CD/DVD/BluRay device. Raspberry Pi and a USB-to-IDE or USB-to-SATA plus external drive is fine.
-* CD/DVD/BluRay disk
-* Packages installed: `wodim` (provides `readom` command), `make`, `sed`, `gnuplot`
+* Linux machine with a CD/DVD/BluRay reader/player. For example, a Raspberry Pi and a USB-to-IDE or USB-to-SATA plus external drive is fine.
+* CD/DVD/BluRay disk.
+* Some packages installed.  Details are provided for a Debian-based OS (including Ubuntu and Raspberry OS).  Please adjust for other Linux-based distributions.
 
-For example, on a Debian-based OS (including Ubuntu and Raspberry OS), you can install the prerequisites with:
+System-wide packages:
 
 ```bash
-sudo apt-get update ; sudo apt-get install wodim make sed gnuplot-nox
+sudo apt-get update ; sudo apt-get install python3 python3-pip wodim python3-pyside2.qtcore python3-pyside2.qtgui python3-pyside2.qtwidgets
 ```
 
-### Get data
+FIXME: assumes Intel architecture in practice.
 
-* Put a CD in the drive.
-* Run command
+The GUI is built upon Python and [guietta](https://guietta.readthedocs.io/en/latest/).
 
-<pre>
-time readom -noerror -nocorr -c2scan dev=/dev/cdrom 2>&1 | tee some_file_name.log
-</pre>
+User-wide packages:
 
-* This will produce a `some_file_name.log` file.
+```bash
+pip3 install guietta
+```
 
-### Get graphs
+### Launch software
 
-* Run `make` to process the data.
-* This will produce `some_file_name.png` and `some_file_name.pdf`.
+```bash
+python3 bioid-gui.py 
+```
+
+### Test access to CD-Rom drive
+
+Click on "Open tray" and "Close tray".  The default CD/DVD drive on the system should do what you expect.
+
+
