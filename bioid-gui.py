@@ -20,7 +20,7 @@ gui = Gui(
     [ 'Analysis run ID' , '__runID__' , ___ ],
     [ HSeparator , ___ , ___ ],
     [ 'Analysis run' , ['Start'] , ['Abort'] ],
-    title="foo"
+    title= title + " - " + pitch
 )
 
 #if "title" in dir(gui):
