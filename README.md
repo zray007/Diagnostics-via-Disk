@@ -22,17 +22,17 @@ All this is proof-of-concept level.  It works for us yet the performance might b
 System-wide packages:
 
 ```bash
-sudo apt-get update ; sudo apt-get install python3 python3-pip wodim python3-pyside2.qtcore python3-pyside2.qtgui python3-pyside2.qtwidgets
+sudo apt-get update ; sudo apt-get install python3 python3-pip python3-qtpy wodim eject git
 ```
-
-FIXME: assumes Intel architecture in practice.
 
 The GUI is built upon Python and [guietta](https://guietta.readthedocs.io/en/latest/).
 
 User-wide packages:
 
 ```bash
-pip3 install guietta
+git clone https://github.com/fidergo-stephane-gourichon/guietta
+cd guietta
+pip3 install -e $PWD
 ```
 
 ### Launch software
