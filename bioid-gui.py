@@ -1,4 +1,5 @@
 from guietta import _, Gui, Quit, ___, III, HS, VS, HSeparator, VSeparator, QFileDialog
+from guietta import Empty, Exceptions
 
 import os
 import subprocess
@@ -22,26 +23,31 @@ gui = Gui(
     [ 'Analysis run ID',                     '__runID__',                                          ___ ],
     [ HSeparator,                            ___,                                                  ___ ],
     [ 'Analysis run',                        ['Start'],                                            ['Abort']   ],
-    title= title + " - " + pitch
+    title= title + " - " + pitch,
+    exceptions = Exceptions.PRINT
 )
 
-# This syntax allows to decouple label text and name of method called, which is good practice.
+pipeToRunningAnalysis = None
 
+# TODO handle case when CD mounted...
+
+# This syntax allows to decouple label text and name of method called, which is good practice.
 def analysisStart(gui, *args):
+    print("analysisStart")
     com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=/dev/cdrom"]
-    myPopen = subprocess.Popen(com,
+
+    global pipeToRunningAnalysis
+    pipeToRunningAnalysis = subprocess.Popen(com,
                                shell = False,
                                stdout = subprocess.PIPE,
                                stderr = subprocess.PIPE,
                                encoding = 'ascii',
                                universal_newlines=True)
-    while True:
-        line = myPopen.stdout.readline()
-        if line == '' and myPopen.poll() is not None:
-            break
-    returnStatus = myPopen.poll()
-    if returnStatus != 0:
-        raise RuntimeError('Problem')
+
+def analysisStop(gui, *args):
+    print("analysisStop")
+    global pipeToRunningAnalysis
+    pipeToRunningAnalysis.kill()
 
 gui.events([ _ , _ , _ ],
            [ _ , _ , _ ],
@@ -50,7 +56,7 @@ gui.events([ _ , _ , _ ],
            [ _ , _ , _ ],
            [ _ , _ , _ ],
            [ _ , _ , _ ],
-           [ _ , analysisStart, _ ],
+           [ _ , analysisStart, analysisStop ],
 )
 
 #if "title" in dir(gui):
@@ -75,4 +81,29 @@ with gui.Closetray:
 #                                             ".",
 #                                             "Analysis run log *.bioidrun (*.bioidrun)")
 
-gui.run()
+def processRunningAnalysis():
+    print("poll readom")
+    global pipeToRunningAnalysis
+    stdout_data = None
+    stderr_data = None
+    try:
+        stdout_data, stderr_data = pipeToRunningAnalysis.communicate(timeout=0)
+    except subprocess.TimeoutExpired:
+        print("readom timeout: {!r}".format(stdout_data))
+        return
+        print("readom says: {!r}".format(stdout_data))
+
+
+counter = 0
+while True:
+    try:
+        name, event = gui.get(timeout=0.1)
+    except Empty:
+        print("poll")
+        if pipeToRunningAnalysis is not None:
+            processRunningAnalysis()
+        continue
+
+    if name is None:
+        print("Exiting event loop")
+        break
