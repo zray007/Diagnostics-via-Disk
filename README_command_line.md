@@ -35,4 +35,5 @@ time readom -noerror -nocorr -c2scan dev=/dev/cdrom 2>&1 | tee some_file_name.lo
 ### Get graphs
 
 * Run `make` to process the data.
-* This will produce `some_file_name.png` and `some_file_name.pdf`.
+* This will produce `some_file_name.dat` `some_file_name.png` and `some_file_name.pdf`.
+* `some_file_name.dat` is the data that is used to produce the graph: first column sector number, second column number of errors in the sector.

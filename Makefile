@@ -3,7 +3,7 @@ DATA=$(READOMLOGS:.log=.dat)
 PNGS=$(READOMLOGS:.log=.png)
 PDFS=$(READOMLOGS:.log=.pdf)
 
-all: $(PNGS) $(PDFS)
+all: $(DATA) $(PNGS) $(PDFS)
 
 %.png %.pdf: %.dat barchart.gnuplot
 	gnuplot -e fname=\"$*\" barchart.gnuplot
