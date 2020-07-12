@@ -11,21 +11,33 @@ from time import strftime
 # * Show progress
 # * Show graph
 
-title="Bio-ID"
+product_name="Bio-ID"
 pitch="Scalable COVID testing on cheap commodity hardware"
 
 gui = Gui(
-    [ 'bioid-logo.png',                      "Scalable COVID testing on cheap commodity hardware", ___ ],
-    [ HSeparator,                            ___,                                                  ___ ],
-    [ 'CD/DVD drive',                        ['Open tray'],                                        ['Close tray']  ],
-    [ HSeparator,                            ___,                                                  ___ ],
-    [ ['Generate new ID from current time'], ___,                                                  'or type a valid file name below' ],
-    [ 'Analysis run ID',                     '__runID__',                                          ___ ],
-    [ HSeparator,                            ___,                                                  ___ ],
-    [ 'Analysis run',                        ['Start'],                                            ['Abort']   ],
-    title= title + " - " + pitch,
+    [ 'bioid-logo.png',                 'pitch',           ___ ],
+    [ HSeparator,                       ___,               ___ ],
+    [ 'CD/DVD drive',                   ['trayOpen'],      ['trayClose']  ],
+    [ HSeparator,                       ___,               ___ ],
+    [ ["generateNewIdFromCurrentTime"], ___,               'or type a valid file name below' ],
+    [ 'Analysis run ID',                '__runID__',       ___ ],
+    [ HSeparator,                       ___,               ___ ],
+    [ 'Analysis run',                   ['analysisStart'], ['analysisStop'] ],
+    title= product_name + " - " + pitch,
     exceptions = Exceptions.PRINT
 )
+
+labels = {
+    'pitch' : pitch,
+    'trayOpen' : 'Open tray',
+    'trayClose' : 'Close tray',
+    'generateNewIdFromCurrentTime' : 'Generate new ID from current time',
+    'analysisStart' : 'Start',
+    'analysisStop' : 'Stop',
+}
+
+for id, label in labels.items():
+    gui.widgets[id].setText(label)
 
 pipeToRunningAnalysis = None
 
@@ -49,32 +61,17 @@ def analysisStop(gui, *args):
     global pipeToRunningAnalysis
     pipeToRunningAnalysis.kill()
 
-gui.events([ _ , _ , _ ],
-           [ _ , _ , _ ],
-           [ _ , _ , _ ],
-           [ _ , _ , _ ],
-           [ _ , _ , _ ],
-           [ _ , _ , _ ],
-           [ _ , _ , _ ],
-           [ _ , analysisStart, analysisStop ],
-)
-
-#if "title" in dir(gui):
-#    gui.title(title + " - " + pitch)
-
 # This syntax allows event to run once at GUI start, which is what we want here
-with gui.GeneratenewIDfromcurrenttime:
+def generateNewIdFromCurrentTime(gui):
     gui.runID = strftime("%Y-%m-%d_%H-%M-%S.bioidrun")
 
 # This syntax allows fire-and-forget behavior useful for calling eject.
-with gui.Opentray:
-   if gui.is_running:
-        os.system("eject cdrom")
+def trayOpen(gui):
+    os.system("eject cdrom")
 
 # This syntax allows fire-and-forget behavior useful for calling eject.
-with gui.Closetray:
-   if gui.is_running:
-        os.system("eject -t cdrom")
+def trayClose(gui):
+    os.system("eject -t cdrom")
 
 
 #filename = QFileDialog.getOpenFileName(None, "Open File",
@@ -94,7 +91,6 @@ def processRunningAnalysis():
         print("readom says: {!r}".format(stdout_data))
 
 
-counter = 0
 while True:
     try:
         name, event = gui.get(timeout=0.1)
@@ -107,3 +103,12 @@ while True:
     if name is None:
         print("Exiting event loop")
         break
+
+    print("Event {!r}".format(name))
+    function = globals().get(name, None)
+    if function is None:
+        print("Unknown " + name)
+    else:
+        print("Calling " + name)
+        function(gui)
+        print("Returned from " + name)
