@@ -11,8 +11,8 @@ from time import strftime
 # * Show progress
 # * Show graph
 
-product_name="Compact Diagnostics"
-product_name_tech="compact_diagnostics"
+product_name="Diagnostics via Disk"
+product_name_tech="diagnostics_via_disk"
 
 pitch="Ramp up COVID-19 testing using frugal devices: CD/DVD drives"
 
