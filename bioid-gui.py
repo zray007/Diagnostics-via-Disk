@@ -1,5 +1,5 @@
 from guietta import _, Gui, Quit, ___, III, HS, VS, HSeparator, VSeparator, QFileDialog
-from guietta import Empty, Exceptions
+from guietta import Empty, Exceptions, P
 
 import os
 import subprocess
@@ -24,7 +24,8 @@ gui = Gui(
     [ ["generateNewIdFromCurrentTime"], ___,               'or type a valid file name below' ],
     [ 'Analysis run ID',                '__runID__',       ___ ],
     [ HSeparator,                       ___,               ___ ],
-    [ 'Analysis run',                   ['analysisStart'], ['analysisStop'] ],
+    [ 'Analysis run control:',                   ['analysisStart'], ['analysisStop'] ],
+    [ 'Analysis progress', P('progress') , 'analysisSpeed' ],
     title= product_name + " - " + pitch,
     exceptions = Exceptions.PRINT
 )
@@ -36,6 +37,7 @@ labels = {
     'generateNewIdFromCurrentTime' : 'Generate new ID from current time',
     'analysisStart' : 'Start',
     'analysisStop' : 'Stop',
+    'analysisSpeed' : '',
 }
 
 for id, label in labels.items():
