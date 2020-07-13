@@ -131,7 +131,7 @@ def updateProgress(match_result, match_action_info):
 labelParseRules = {
     "Read +speed: +(.+)$" : { 'func' : updateWidget, 'target' : 'programmedSpeed',  },
     "Write +speed: +(.+)$" : { 'func' : ignore },
-    "Capacity: (([0-9]+) Blocks = 427008 kBytes = 417 MBytes = 437 prMB)" : { 'func' : setCapacity },
+    "Capacity: (([0-9]+) Blocks = [0-9]+ kBytes = [0-9]+ MBytes = [0-9]+ prMB)" : { 'func' : setCapacity },
     "addr: +([0-9]+)" : { 'func' : updateProgress },
     "Sectorsize: +(.+)$" : { 'func' : updateWidget, 'target' : 'sectorSize',  },
     }
