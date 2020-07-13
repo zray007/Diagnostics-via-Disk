@@ -59,6 +59,8 @@ font = QFont( "Arial", 20, QFont.Bold)
 titleWidget = gui.widgets['pitch']
 titleWidget.setFont(font)
 
+gui.widgets['diagnostics_via_disklogo'].setMargin(10)
+
 runningAnalysisProcess = None
 logfile_write_descriptor = None
 logfile_read_descriptor = None
