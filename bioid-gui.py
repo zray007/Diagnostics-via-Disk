@@ -65,7 +65,6 @@ logfile_read_descriptor = None
 
 # TODO handle case when CD mounted...
 
-# This syntax allows to decouple label text and name of method called, which is good practice.
 def analysisStart(gui, *args):
     print("analysisStart")
     com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=/dev/cdrom"]
@@ -89,17 +88,14 @@ def analysisStop(gui, *args):
     global runningAnalysisProcess
     runningAnalysisProcess.kill()
 
-# This syntax allows event to run once at GUI start, which is what we want here
 def generateNewIdFromCurrentTime(gui):
     gui.runID = product_name_tech + "-run_" + strftime( "%Y-%m-%d_%H-%M-%S")
 
 generateNewIdFromCurrentTime(gui);
 
-# This syntax allows fire-and-forget behavior useful for calling eject.
 def trayOpen(gui):
     os.system("eject cdrom")
 
-# This syntax allows fire-and-forget behavior useful for calling eject.
 def trayClose(gui):
     os.system("eject -t cdrom")
 
