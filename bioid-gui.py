@@ -3,6 +3,7 @@ from guietta import Empty, Exceptions, P
 
 import os
 import subprocess
+import re
 
 from time import strftime
 
@@ -25,7 +26,11 @@ gui = Gui(
     [ 'Analysis run ID',                '__runID__',       ___ ],
     [ HSeparator,                       ___,               ___ ],
     [ 'Analysis run control:',                   ['analysisStart'], ['analysisStop'] ],
-    [ 'Analysis progress', P('progress') , 'analysisSpeed' ],
+    [ HSeparator,                       ___,               ___ ],
+    [ 'Programmed speed:', 'programmedSpeed' , ___ ],
+    [ 'Disk capacity:', 'diskCapacity' , ___ ],
+    [ 'Sector size:', 'sectorSize' , ___ ],
+    [ 'Analysis progress', P('analysisProgress') , 'instantSpeed' ],
     title= product_name + " - " + pitch,
     exceptions = Exceptions.PRINT
 )
@@ -37,7 +42,10 @@ labels = {
     'generateNewIdFromCurrentTime' : 'Generate new ID from current time',
     'analysisStart' : 'Start',
     'analysisStop' : 'Stop',
-    'analysisSpeed' : '',
+    'programmedSpeed' : '',
+    'diskCapacity' : '',
+    'sectorSize' : '',
+    'instantSpeed' : '',
 }
 
 for id, label in labels.items():
@@ -92,6 +100,41 @@ def trayClose(gui):
 #                                             ".",
 #                                             "Analysis run log *.bioidrun (*.bioidrun)")
 
+def updateWidget(match_result, match_action_info):
+    target_widget = match_action_info['target']
+    print("updateWidget " + target_widget)
+    gui.widgets[target_widget].setText(match_result.group(1))
+
+def ignore(match_result, match_action_info):
+    print ("Ignoring line: {!r}".format(match_result.string))
+
+diskSectorCount = None
+
+def setCapacity(match_result, match_action_info):
+    gui.diskCapacity = match_result.group(1)
+    global diskSectorCount
+    diskSectorCount = int ( match_result.group(2) )
+
+def updateProgress(match_result, match_action_info):
+    global diskSectorCount
+    currentSector = int ( match_result.group(1) )
+    percentage = int ( 100 * currentSector / diskSectorCount )
+    print("{!r} / {!r} = {!r}".format( currentSector, diskSectorCount , percentage ) )
+    gui.analysisProgress = percentage
+
+labelParseRules = {
+    "Read +speed: +(.+)$" : { 'func' : updateWidget, 'target' : 'programmedSpeed',  },
+    "Write +speed: +(.+)$" : { 'func' : ignore },
+    "Capacity: (([0-9]+) Blocks = 427008 kBytes = 417 MBytes = 437 prMB)" : { 'func' : setCapacity },
+    "addr: +([0-9]+)" : { 'func' : updateProgress },
+    "Sectorsize: +(.+)$" : { 'func' : updateWidget, 'target' : 'sectorSize',  },
+    }
+
+labelParseRulesCompiled = {
+    re.compile(regexpstring) : match_action_info for regexpstring, match_action_info in labelParseRules.items()
+}
+
+
 def updateGuiFromProcessLog():
     print("poll readom")
     global runningAnalysisProcess
@@ -106,6 +149,21 @@ def updateGuiFromProcessLog():
     if bytes_available > 0 :
         bytes = logfile_read_descriptor.read(bytes_available)
         print("readom said: '{!r}'".format(bytes) )
+        lineread = bytes.decode("ascii")
+        match_result = None
+        for regexp, match_action_info in labelParseRulesCompiled.items():
+            match_result = regexp.match(lineread)
+            if match_result is not None:
+                break
+
+        if match_result is not None:
+            print ("matched {!r} with result {!r}".format(regexp.pattern, match_result))
+            function_to_call = match_action_info['func']
+            function_to_call(match_result, match_action_info)
+        else:
+            print ("Warning unmatched: {!r}".format(lineread))
+            print ("Warning unmatched: {!r}".format(lineread))
+
 
     if runningAnalysisProcess.poll() is not None:
         print("process has exited")
