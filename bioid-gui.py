@@ -66,6 +66,8 @@ def analysisStop(gui, *args):
 def generateNewIdFromCurrentTime(gui):
     gui.runID = product_name + "-run_" + strftime( "%Y-%m-%d_%H-%M-%S")
 
+generateNewIdFromCurrentTime(gui);
+
 # This syntax allows fire-and-forget behavior useful for calling eject.
 def trayOpen(gui):
     os.system("eject cdrom")
