@@ -18,19 +18,19 @@ product_name_tech="diagnostics_via_disk"
 pitch="Ramp up COVID-19 testing using frugal devices: CD/DVD drives"
 
 gui = Gui(
-    [ 'bioid-logo.png',                 'pitch',           ___ ],
-    [ HSeparator,                       ___,               ___ ],
-    [ 'CD/DVD drive',                   ['trayOpen'],      ['trayClose']  ],
-    [ HSeparator,                       ___,               ___ ],
-    [ ["generateNewIdFromCurrentTime"], ___,               'or type a valid file name below' ],
-    [ 'Analysis run ID',                '__runID__',       ___ ],
-    [ HSeparator,                       ___,               ___ ],
-    [ 'Analysis run control:',                   ['analysisStart'], ['analysisStop'] ],
-    [ HSeparator,                       ___,               ___ ],
-    [ 'Programmed speed:', 'programmedSpeed' , ___ ],
-    [ 'Disk capacity:', 'diskCapacity' , ___ ],
-    [ 'Sector size:', 'sectorSize' , ___ ],
-    [ 'Analysis progress', P('analysisProgress'), ___ ],
+    [ 'pitch',           ___ , ___ , 'diagnostics_via_disk-logo.png' ],
+    [ HSeparator,                       ___,               ___ , III ],
+    [ 'CD/DVD drive',                   ['trayOpen', III ],      ['trayClose']  , III ],
+    [ HSeparator,                       ___,               ___ , III ],
+    [ ["generateNewIdFromCurrentTime", III ], ___,               'or type a valid file name below' , III ],
+    [ 'Analysis run ID',                '__runID__',       ___ , III ],
+    [ HSeparator,                       ___,               ___ , III ],
+    [ 'Analysis run control:',                   ['analysisStart', III ], ['analysisStop'] , III ],
+    [ HSeparator,                       ___,               ___ , III ],
+    [ 'Programmed speed:', 'programmedSpeed' , ___ , III ],
+    [ 'Disk capacity:', 'diskCapacity' , ___ , III ],
+    [ 'Sector size:', 'sectorSize' , ___ , III ],
+    [ 'Analysis progress', P('analysisProgress'), ___ , III ],
     #  , 'instantSpeed
     title= product_name + " - " + pitch,
     exceptions = Exceptions.PRINT
