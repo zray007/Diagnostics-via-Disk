@@ -5,6 +5,8 @@ import os
 import subprocess
 import re
 
+from qtpy.QtGui import QFont
+
 from time import strftime
 
 # Aim of the GUI.
@@ -15,7 +17,7 @@ from time import strftime
 product_name="Diagnostics via Disk"
 product_name_tech="diagnostics_via_disk"
 
-pitch="Ramp up COVID-19 testing using frugal devices: CD/DVD drives"
+pitch="Ramp up COVID-19 testing\nusing frugal devices: CD/DVD drives"
 
 gui = Gui(
     [ 'pitch',           ___ , ___ , 'diagnostics_via_disk-logo.png' ],
@@ -51,6 +53,11 @@ labels = {
 
 for id, label in labels.items():
     gui.widgets[id].setText(label)
+
+
+font = QFont( "Arial", 20, QFont.Bold)
+titleWidget = gui.widgets['pitch']
+titleWidget.setFont(font)
 
 runningAnalysisProcess = None
 logfile_write_descriptor = None
