@@ -40,6 +40,8 @@ for id, label in labels.items():
     gui.widgets[id].setText(label)
 
 runningAnalysisProcess = None
+logfile_write_descriptor = None
+logfile_read_descriptor = None
 
 # TODO handle case when CD mounted...
 
@@ -48,14 +50,19 @@ def analysisStart(gui, *args):
     print("analysisStart")
     com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=/dev/cdrom"]
 
-    global runningAnalysisProcess
     logfilename = gui.runID + ".log"
 
-    with open(logfilename, "a") as logfiledescriptor:
-        runningAnalysisProcess = subprocess.Popen(com,
-                                                  shell = False,
-                                                  stdout = logfiledescriptor,
-                                                  stderr = subprocess.STDOUT)
+    global logfile_write_descriptor
+    logfile_write_descriptor = open(logfilename, "a")
+
+    global runningAnalysisProcess
+    runningAnalysisProcess = subprocess.Popen(com,
+                                              shell = False,
+                                              stdout = logfile_write_descriptor,
+                                              stderr = subprocess.STDOUT)
+
+    global logfile_read_descriptor
+    logfile_read_descriptor = open(logfilename, "rb")
 
 def analysisStop(gui, *args):
     print("analysisStop")
@@ -84,14 +91,22 @@ def trayClose(gui):
 def updateGuiFromProcessLog():
     print("poll readom")
     global runningAnalysisProcess
-    stdout_data = None
-    stderr_data = None
-    try:
-        stdout_data, stderr_data = runningAnalysisProcess.communicate(timeout=0)
-    except subprocess.TimeoutExpired:
-        print("readom timeout: {!r}".format(stdout_data))
+    global logfile_write_descriptor
+    global logfile_read_descriptor
+
+    write_position = logfile_write_descriptor.tell()
+    read_position = logfile_read_descriptor.tell()
+
+    bytes_available = write_position - read_position
+
+    if bytes_available > 0 :
+        bytes = logfile_read_descriptor.read(bytes_available)
+        print("readom said: '{!r}'".format(bytes) )
+
+    if runningAnalysisProcess.poll() is not None:
+        print("process has exited")
+        runningAnalysisProcess = None
         return
-        print("readom says: {!r}".format(stdout_data))
 
 
 while True:
