@@ -39,7 +39,7 @@ labels = {
 for id, label in labels.items():
     gui.widgets[id].setText(label)
 
-pipeToRunningAnalysis = None
+runningAnalysisProcess = None
 
 # TODO handle case when CD mounted...
 
@@ -48,8 +48,8 @@ def analysisStart(gui, *args):
     print("analysisStart")
     com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=/dev/cdrom"]
 
-    global pipeToRunningAnalysis
-    pipeToRunningAnalysis = subprocess.Popen(com,
+    global runningAnalysisProcess
+    runningAnalysisProcess = subprocess.Popen(com,
                                shell = False,
                                stdout = subprocess.PIPE,
                                stderr = subprocess.PIPE,
@@ -58,8 +58,8 @@ def analysisStart(gui, *args):
 
 def analysisStop(gui, *args):
     print("analysisStop")
-    global pipeToRunningAnalysis
-    pipeToRunningAnalysis.kill()
+    global runningAnalysisProcess
+    runningAnalysisProcess.kill()
 
 # This syntax allows event to run once at GUI start, which is what we want here
 def generateNewIdFromCurrentTime(gui):
@@ -78,13 +78,13 @@ def trayClose(gui):
 #                                             ".",
 #                                             "Analysis run log *.bioidrun (*.bioidrun)")
 
-def processRunningAnalysis():
+def updateGuiFromProcessLog():
     print("poll readom")
-    global pipeToRunningAnalysis
+    global runningAnalysisProcess
     stdout_data = None
     stderr_data = None
     try:
-        stdout_data, stderr_data = pipeToRunningAnalysis.communicate(timeout=0)
+        stdout_data, stderr_data = runningAnalysisProcess.communicate(timeout=0)
     except subprocess.TimeoutExpired:
         print("readom timeout: {!r}".format(stdout_data))
         return
@@ -96,8 +96,8 @@ while True:
         name, event = gui.get(timeout=0.1)
     except Empty:
         print("poll")
-        if pipeToRunningAnalysis is not None:
-            processRunningAnalysis()
+        if runningAnalysisProcess is not None:
+            updateGuiFromProcessLog()
         continue
 
     if name is None:
