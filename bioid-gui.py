@@ -73,7 +73,7 @@ def analysisStart(gui, *args):
                                               shell = False,
                                               stdout = logfile_write_descriptor,
                                               stderr = subprocess.STDOUT)
-
+    enableOrDisableRelevantWidgets()
     global logfile_read_descriptor
     logfile_read_descriptor = open(logfilename, "rb")
 
@@ -135,6 +135,17 @@ labelParseRulesCompiled = {
     re.compile(regexpstring) : match_action_info for regexpstring, match_action_info in labelParseRules.items()
 }
 
+def enableOrDisableRelevantWidgets():
+    running = ( runningAnalysisProcess is not None )
+    gui.widgets['analysisStart'].setEnabled( not running )
+    gui.widgets['analysisStop'].setEnabled( running )
+    gui.widgets['trayOpen'].setEnabled( not running )
+    gui.widgets['trayClose'].setEnabled( not running )
+    gui.widgets['analysisProgress'].setEnabled( running )
+    if not running:
+        gui.analysisProgress = 0
+
+enableOrDisableRelevantWidgets()
 
 def updateGuiFromProcessLog():
     print("poll readom")
@@ -169,6 +180,7 @@ def updateGuiFromProcessLog():
     if runningAnalysisProcess.poll() is not None:
         print("process has exited")
         runningAnalysisProcess = None
+        enableOrDisableRelevantWidgets()
         return
 
 
