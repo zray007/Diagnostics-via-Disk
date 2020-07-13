@@ -152,6 +152,8 @@ def enableOrDisableRelevantWidgets():
 
 enableOrDisableRelevantWidgets()
 
+regexp_to_split_lines = re.compile('\r\n|\r|\n')
+
 def updateGuiFromProcessLog():
     print("poll readom")
     global runningAnalysisProcess
@@ -166,20 +168,22 @@ def updateGuiFromProcessLog():
     if bytes_available > 0 :
         bytes = logfile_read_descriptor.read(bytes_available)
         print("readom said: '{!r}'".format(bytes) )
-        lineread = bytes.decode("ascii")
-        match_result = None
-        for regexp, match_action_info in labelParseRulesCompiled.items():
-            match_result = regexp.match(lineread)
-            if match_result is not None:
-                break
+        partread = bytes.decode("ascii")
+        linesread = regexp_to_split_lines.split(partread)
+        for lineread in linesread:
+            match_result = None
+            for regexp, match_action_info in labelParseRulesCompiled.items():
+                match_result = regexp.match(lineread)
+                if match_result is not None:
+                    break
 
-        if match_result is not None:
-            print ("matched {!r} with result {!r}".format(regexp.pattern, match_result))
-            function_to_call = match_action_info['func']
-            function_to_call(match_result, match_action_info)
-        else:
-            print ("Warning unmatched: {!r}".format(lineread))
-            print ("Warning unmatched: {!r}".format(lineread))
+            if match_result is not None:
+                print ("matched {!r} with result {!r}".format(regexp.pattern, match_result))
+                function_to_call = match_action_info['func']
+                function_to_call(match_result, match_action_info)
+            else:
+                print ("Warning unmatched: {!r}".format(lineread))
+                print ("Warning unmatched: {!r}".format(lineread))
 
 
     if runningAnalysisProcess.poll() is not None:
