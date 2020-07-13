@@ -30,7 +30,8 @@ gui = Gui(
     [ 'Programmed speed:', 'programmedSpeed' , ___ ],
     [ 'Disk capacity:', 'diskCapacity' , ___ ],
     [ 'Sector size:', 'sectorSize' , ___ ],
-    [ 'Analysis progress', P('analysisProgress') , 'instantSpeed' ],
+    [ 'Analysis progress', P('analysisProgress'), ___ ],
+    #  , 'instantSpeed
     title= product_name + " - " + pitch,
     exceptions = Exceptions.PRINT
 )
@@ -45,7 +46,7 @@ labels = {
     'programmedSpeed' : '',
     'diskCapacity' : '',
     'sectorSize' : '',
-    'instantSpeed' : '',
+    #'instantSpeed' : '',
 }
 
 for id, label in labels.items():
