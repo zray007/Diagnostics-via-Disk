@@ -49,12 +49,13 @@ def analysisStart(gui, *args):
     com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=/dev/cdrom"]
 
     global runningAnalysisProcess
-    runningAnalysisProcess = subprocess.Popen(com,
-                               shell = False,
-                               stdout = subprocess.PIPE,
-                               stderr = subprocess.PIPE,
-                               encoding = 'ascii',
-                               universal_newlines=True)
+    logfilename = gui.runID + ".log"
+
+    with open(logfilename, "a") as logfiledescriptor:
+        runningAnalysisProcess = subprocess.Popen(com,
+                                                  shell = False,
+                                                  stdout = logfiledescriptor,
+                                                  stderr = subprocess.STDOUT)
 
 def analysisStop(gui, *args):
     print("analysisStop")
