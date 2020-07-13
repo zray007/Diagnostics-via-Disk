@@ -1,8 +1,10 @@
-# Bio-ID
+# Diagnostics Via Disk
 
-## Scalable COVID testing on cheap commodity hardware: CD/DVD drives
+## Ramp up COVID-19 testing using frugal devices: CD/DVD drives
 
-Work in progress!
+This is a proof-of-concept for hackster project at https://www.hackster.io/laserx/diagnostics-via-disc-5793c0 for [The COVID-19 Detect &amp; Protect Challenge](https://www.hackster.io/contests/UNDPCOVID19)
+
+![GUI screenshot](doc/gui-screenshot-00.png)
 
 ## How to use
 
@@ -44,5 +46,4 @@ python3 bioid-gui.py
 ### Test access to CD-Rom drive
 
 Click on "Open tray" and "Close tray".  The default CD/DVD drive on the system should do what you expect.
-
 
