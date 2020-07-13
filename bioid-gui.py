@@ -11,8 +11,10 @@ from time import strftime
 # * Show progress
 # * Show graph
 
-product_name="Bio-ID"
-pitch="Scalable COVID testing on cheap commodity hardware"
+product_name="Compact Diagnostics"
+product_name_tech="compact_diagnostics"
+
+pitch="Ramp up COVID-19 testing using frugal devices: CD/DVD drives"
 
 gui = Gui(
     [ 'bioid-logo.png',                 'pitch',           ___ ],
@@ -71,7 +73,7 @@ def analysisStop(gui, *args):
 
 # This syntax allows event to run once at GUI start, which is what we want here
 def generateNewIdFromCurrentTime(gui):
-    gui.runID = product_name + "-run_" + strftime( "%Y-%m-%d_%H-%M-%S")
+    gui.runID = product_name_tech + "-run_" + strftime( "%Y-%m-%d_%H-%M-%S")
 
 generateNewIdFromCurrentTime(gui);
 
