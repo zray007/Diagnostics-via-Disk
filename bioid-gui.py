@@ -64,7 +64,7 @@ def analysisStop(gui, *args):
 
 # This syntax allows event to run once at GUI start, which is what we want here
 def generateNewIdFromCurrentTime(gui):
-    gui.runID = strftime("%Y-%m-%d_%H-%M-%S.bioidrun")
+    gui.runID = product_name + "-run_" + strftime( "%Y-%m-%d_%H-%M-%S")
 
 # This syntax allows fire-and-forget behavior useful for calling eject.
 def trayOpen(gui):
