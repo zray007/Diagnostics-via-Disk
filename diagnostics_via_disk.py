@@ -149,7 +149,7 @@ cb_QComboBox()
 
 def cb_analysisStart(gui, *args):
     print("analysisStart")
-    com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=/dev/cdrom"]
+    com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=" + drive_name ]
 
     logfilename = gui.runID + ".log"
 
