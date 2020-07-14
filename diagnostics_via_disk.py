@@ -19,20 +19,22 @@ product_name_tech="diagnostics_via_disk"
 
 pitch="Ramp up COVID-19 testing\nusing frugal devices: CD/DVD drives"
 
+driveChooseComboBox = QComboBox()
+
 gui = Gui(
-    [ 'pitch',           ___ , ___ , ___, VSeparator, 'diagnostics_via_disk-logo.png' ],
-    [ HSeparator,                       ___,               ___, III, III, III ],
-    [ 'CD/DVD drive',                   ['trayOpen', III ],      ['trayClose'], III, III, III ],
-    [ HSeparator,                       ___,               ___, III, III, III ],
-    [ ["generateNewIdFromCurrentTime", III ], ___,               'or type a valid file name below', III, III, III ],
-    [ 'Analysis run ID',                '__runID__',       ___, III, III, III ],
-    [ HSeparator,                       ___,               ___, III, III, III ],
-    [ 'Analysis run control:',                   ['analysisStart', III ], ['analysisStop'], III, III, III ],
-    [ HSeparator,                       ___,               ___, III, III, III ],
-    [ 'Programmed speed:', 'programmedSpeed' , ___, III, III, III ],
-    [ 'Disk capacity:', 'diskCapacity' , ___, III, III, III ],
-    [ 'Sector size:', 'sectorSize' , ___, III, III, III ],
-    [ 'Analysis progress', P('analysisProgress'), ___, III, III, III ],
+    [ 'pitch',           ___ , ___ , VSeparator, 'diagnostics_via_disk-logo.png' ],
+    [ HSeparator,                       ___,               ___, III, III ],
+    [ 'CD/DVD drive',                   ['trayOpen'],      ['trayClose'], III, III ],
+    [ HSeparator,                       ___,               ___, III, III ],
+    [ ["generateNewIdFromCurrentTime"], ___,               'or type a valid file name below', III, III ],
+    [ 'Analysis run ID',                '__runID__',       ___, III, III ],
+    [ HSeparator,                       ___,               ___, III, III ],
+    [ 'Analysis run control:',                   ['analysisStart'], ['analysisStop'], III, III ],
+    [ HSeparator,                       ___,               ___, III, III ],
+    [ 'Programmed speed:', 'programmedSpeed' , ___, III, III ],
+    [ 'Disk capacity:', 'diskCapacity' , ___, III, III ],
+    [ 'Sector size:', 'sectorSize' , ___, III, III ],
+    [ 'Analysis progress', P('analysisProgress'), ___, III, III ],
     #  , 'instantSpeed
     title= product_name + " - " + pitch.replace('\n'," "),
     exceptions = Exceptions.PRINT
