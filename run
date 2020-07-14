@@ -1,0 +1,3 @@
+#!/bin/bash
+source ../env/bioid/bin/activate
+python bioid-gui.py
