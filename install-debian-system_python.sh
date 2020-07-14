@@ -7,8 +7,8 @@ sudo apt-get install -y \
      python3-cdio
      wodim git \
 
-pip3 install --no-dependencies guietta
+pip3 install qtpy
 
-# The `--no-deps` option is because Ubuntu provides `PyQt5` which
-# guietta can use, although dependencies tell `PySide2` is mandatory,
-# so we have to instruct pip .
+git clone https://github.com/fidergo-stephane-gourichon/guietta
+cd guietta
+pip3 install -e "$PWD"

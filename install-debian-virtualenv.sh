@@ -13,4 +13,8 @@ python3 -m virtualenv --system-site-packages -p /usr/bin/python3 env/diagvdisk
 
 source env/diagvdisk/bin/activate
 
-pip3 install qtpy guietta pycdio
+pip3 install qtpy pycdio
+
+git clone https://github.com/fidergo-stephane-gourichon/guietta
+cd guietta
+pip3 install -e "$PWD"
