@@ -246,7 +246,7 @@ labelParseRulesCompiled = {
 regexp_to_split_lines = re.compile('\r\n|\r|\n')
 
 def updateGuiFromProcessLog():
-    print("poll readom")
+    #print("poll readom")
     global runningAnalysisProcess
     global logfile_write_descriptor
     global logfile_read_descriptor
