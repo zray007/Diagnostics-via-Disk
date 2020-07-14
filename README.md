@@ -30,21 +30,37 @@ The code is built upon:
 * [guietta](https://guietta.readthedocs.io/en/latest/).
 * `readom` (from package `wodim`)
 
+#### Quick install, on Debian and derivatives, using system Python
+
+This is the quickest solution, recommended if you can install everything via packages, for example on Ubuntu 20.04.
+
+Especially on Raspberry Pi where Debian supplies all necessary packages compiled for the Pi's ARM architecture, while Python-side solutions often lack ARM builds.
+
+```bash
+install-debian-system_python.sh
+```
+
 #### Quick install, on Debian and derivatives, using a ad-hoc python virtualenv
 
-The script installs the base requirements and uses a python virtual environment for python requirements
+This can be useful in older distributions, for example Ubuntu 18.04.
+
+The script installs the base requirements and uses a python virtual environment for other python requirements
 
 ```bash
 bash install-debian-virtualenv.sh
 ```
 
-#### Quick install, on Debian and derivatives, using system Python
+#### Other cases
 
-Details are provided for a Debian-based OS (including Ubuntu and Raspberry Pi OS).  Please adjust for other Linux-based distributions.
+Details are provided above for a Debian-based OS (including Ubuntu and Raspberry Pi OS).
 
-```bash
-install-debian-system_python.sh
-```
+For other Linux-based distributions, have a look at the scripts, your distributions most certainly provides equivalent commands and perhaps necessary packages.
+
+Once you have `python3` and `pip3` running, most of the rest can be pulled via pythonic ways of doing rather than distribution-centric ways.
+
+For example, if some package `foo` is not available on your distributions via `apt-get install` or equivalent, you may try `pip3 install foo` in the virtualenv.
+
+That said, you will most certainly need builds of `libcdio` and `libiso9660`, for example `libcdio-dev` and `libiso9660-dev`.  If those are not available at all, you may need to recompile them from scratch.
 
 ### Launch software
 
@@ -61,4 +77,3 @@ python3 bioid-gui.py
 ### Test access to CD-Rom drive
 
 Click on "Open tray" and "Close tray".  The default CD/DVD drive on the system should do what you expect.
-
