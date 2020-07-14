@@ -29,19 +29,19 @@ driveChooseComboBox = QComboBox()
 # repeat? yes
 
 gui = Gui(
-    [ 'pitch'                  , ___                    , ___                  , VSeparator  , logo_path ],
-    [ HSeparator               , ___                    , ___                  , III         , III       ],
-    [ 'CD/DVD drive'           , ['trayOpen']           , ['trayClose']        , III         , III       ],
-    [ HSeparator               , ___                    , ___                  , III         , III       ],
-    [ ["genIdFromTime"]        , ___                    , 'ortype'             , III         , III       ],
-    [ 'Analysis run ID'        , '__runID__'            , ___                  , III         , III       ],
-    [ HSeparator               , ___                    , ___                  , III         , III       ],
-    [ 'Analysis run control:'  , ['analysisStart']      , ['analysisStop']     , III         , III       ],
-    [ HSeparator               , ___                    , ___                  , III         , III       ],
-    [ 'Programmed speed:'      , 'programmedSpeed'      , ___                  , III         , III       ],
-    [ 'Disk capacity:'         , 'diskCapacity'         , ___                  , III         , III       ],
-    [ 'Sector size:'           , 'sectorSize'           , ___                  , III         , III       ],
-    [ 'Analysis progress'      , P('analysisProgress')  , ___                  , III         , III       ],
+    [ 'pitch'                  , ___                    , ___                    , VSeparator  , logo_path ],
+    [ HSeparator               , ___                    , ___                    , III         , III       ],
+    [ 'CD/DVD drive'           , ['trayOpen']           , ['trayClose']          , III         , III       ],
+    [ HSeparator               , ___                    , ___                    , III         , III       ],
+    [ ["genIdFromTime"]        , ___                    , 'ortype'               , III         , III       ],
+    [ 'Analysis run ID'        , '__runID__'            , ___                    , III         , III       ],
+    [ HSeparator               , ___                    , ___                    , III         , III       ],
+    [ 'Analysis run control:'  , ['analysisStart']      , ['analysisStop']       , III         , III       ],
+    [ HSeparator               , ___                    , ___                    , III         , III       ],
+    [ 'Programmed speed:'      , 'programmedSpeed'      , ___                    , III         , III       ],
+    [ 'Disk capacity:'         , 'diskCapacity'         , ___                    , III         , III       ],
+    [ 'Sector size:'           , 'sectorSize'           , ___                    , III         , III       ],
+    [ 'Analysis progress'      , P('analysisProgress')  , ___                    , III         , III       ],
     title= product_name + " - " + pitch.replace('\n'," "),
     exceptions = Exceptions.PRINT
 )
