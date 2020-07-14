@@ -16,26 +16,32 @@ from time import strftime
 
 product_name="Diagnostics via Disk"
 product_name_tech="diagnostics_via_disk"
+logo_path='diagnostics_via_disk-logo.png'
 
 pitch="Ramp up COVID-19 testing\nusing frugal devices: CD/DVD drives"
 
 driveChooseComboBox = QComboBox()
 
+# To realign in emacs:
+# C-u align-regexp
+# as a regexp set this without the quotes:  '\(\),'
+# let default answer '1' for the two question
+# repeat? yes
+
 gui = Gui(
-    [ 'pitch',           ___ , ___ , VSeparator, 'diagnostics_via_disk-logo.png' ],
-    [ HSeparator,                       ___,               ___, III, III ],
-    [ 'CD/DVD drive',                   ['trayOpen'],      ['trayClose'], III, III ],
-    [ HSeparator,                       ___,               ___, III, III ],
-    [ ["generateNewIdFromCurrentTime"], ___,               'or type a valid file name below', III, III ],
-    [ 'Analysis run ID',                '__runID__',       ___, III, III ],
-    [ HSeparator,                       ___,               ___, III, III ],
-    [ 'Analysis run control:',                   ['analysisStart'], ['analysisStop'], III, III ],
-    [ HSeparator,                       ___,               ___, III, III ],
-    [ 'Programmed speed:', 'programmedSpeed' , ___, III, III ],
-    [ 'Disk capacity:', 'diskCapacity' , ___, III, III ],
-    [ 'Sector size:', 'sectorSize' , ___, III, III ],
-    [ 'Analysis progress', P('analysisProgress'), ___, III, III ],
-    #  , 'instantSpeed
+    [ 'pitch'                  , ___                    , ___                  , VSeparator  , logo_path ],
+    [ HSeparator               , ___                    , ___                  , III         , III       ],
+    [ 'CD/DVD drive'           , ['trayOpen']           , ['trayClose']        , III         , III       ],
+    [ HSeparator               , ___                    , ___                  , III         , III       ],
+    [ ["genIdFromTime"]        , ___                    , 'ortype'             , III         , III       ],
+    [ 'Analysis run ID'        , '__runID__'            , ___                  , III         , III       ],
+    [ HSeparator               , ___                    , ___                  , III         , III       ],
+    [ 'Analysis run control:'  , ['analysisStart']      , ['analysisStop']     , III         , III       ],
+    [ HSeparator               , ___                    , ___                  , III         , III       ],
+    [ 'Programmed speed:'      , 'programmedSpeed'      , ___                  , III         , III       ],
+    [ 'Disk capacity:'         , 'diskCapacity'         , ___                  , III         , III       ],
+    [ 'Sector size:'           , 'sectorSize'           , ___                  , III         , III       ],
+    [ 'Analysis progress'      , P('analysisProgress')  , ___                  , III         , III       ],
     title= product_name + " - " + pitch.replace('\n'," "),
     exceptions = Exceptions.PRINT
 )
@@ -44,12 +50,13 @@ labels = {
     'pitch' : pitch,
     'trayOpen' : 'Open tray',
     'trayClose' : 'Close tray',
-    'generateNewIdFromCurrentTime' : 'Generate new ID from current time',
+    'genIdFromTime' : 'Generate new ID from current time',
     'analysisStart' : 'Start',
     'analysisStop' : 'Stop',
     'programmedSpeed' : '',
     'diskCapacity' : '',
     'sectorSize' : '',
+    'ortype': 'or type a valid file name below',
     #'instantSpeed' : '',
 }
 
@@ -92,10 +99,10 @@ def cb_analysisStop(gui, *args):
     global runningAnalysisProcess
     runningAnalysisProcess.kill()
 
-def cb_generateNewIdFromCurrentTime(gui):
+def cb_genIdFromTime(gui):
     gui.runID = product_name_tech + "-run_" + strftime( "%Y-%m-%d_%H-%M-%S")
 
-cb_generateNewIdFromCurrentTime(gui);
+cb_genIdFromTime(gui);
 
 def cb_trayOpen(gui):
     os.system("eject cdrom")
