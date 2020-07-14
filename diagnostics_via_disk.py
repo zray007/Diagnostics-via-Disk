@@ -67,7 +67,7 @@ logfile_read_descriptor = None
 
 # TODO handle case when CD mounted...
 
-def analysisStart(gui, *args):
+def cb_analysisStart(gui, *args):
     print("analysisStart")
     com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=/dev/cdrom"]
 
@@ -85,20 +85,20 @@ def analysisStart(gui, *args):
     global logfile_read_descriptor
     logfile_read_descriptor = open(logfilename, "rb")
 
-def analysisStop(gui, *args):
+def cb_analysisStop(gui, *args):
     print("analysisStop")
     global runningAnalysisProcess
     runningAnalysisProcess.kill()
 
-def generateNewIdFromCurrentTime(gui):
+def cb_generateNewIdFromCurrentTime(gui):
     gui.runID = product_name_tech + "-run_" + strftime( "%Y-%m-%d_%H-%M-%S")
 
-generateNewIdFromCurrentTime(gui);
+cb_generateNewIdFromCurrentTime(gui);
 
-def trayOpen(gui):
+def cb_trayOpen(gui):
     os.system("eject cdrom")
 
-def trayClose(gui):
+def cb_trayClose(gui):
     os.system("eject -t cdrom")
 
 
@@ -206,10 +206,11 @@ while True:
         break
 
     print("Event {!r}".format(name))
-    function = globals().get(name, None)
+    functionName = "cb_" + name
+    function = globals().get(functionName, None)
     if function is None:
-        print("Unknown " + name)
+        print("Unknown " + functionName)
     else:
-        print("Calling " + name)
+        print("Calling " + functionName + " function {!r}".format(function) )
         function(gui)
-        print("Returned from " + name)
+        print("Returned from " + functionName)
