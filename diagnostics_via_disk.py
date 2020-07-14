@@ -102,6 +102,14 @@ enableOrDisableRelevantWidgets()
 
 err_no_drive='NO DRIVE DETECTED'
 
+def hands_off_the_drive(*args):
+    global drive
+    drive = None
+    global drive_name
+    drive_name = 'No drive selected'
+    cb_refreshDrivesList()
+
+
 def cb_refreshDrivesList(*args):
     drives = cdio.get_devices(pycdio.DRIVER_UNKNOWN)
     driveChooseComboBox.clear()
@@ -169,11 +177,17 @@ cb_genIdFromTime(gui);
 
 def cb_trayOpen(gui):
     global drive
-    drive.eject_media()
+    try:
+        drive.eject_media()
+    except cdio.DriverError:
+        hands_off_the_drive()
 
 def cb_trayClose(gui):
     global drive_name
-    cdio.close_tray(drive_name)
+    try:
+        cdio.close_tray(drive_name)
+    except cdio.DriverError:
+        hands_off_the_drive()
 
 
 
