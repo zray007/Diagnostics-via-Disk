@@ -17,6 +17,14 @@ All this is proof-of-concept level.  It works for us yet the performance might b
 
 ### Requirements
 
+#### Install using bash script
+
+The script installs the base requirements and uses a python virtual environment for python requirments
+```bash
+bash install.sh
+```
+
+#### Install manually
 * Linux machine with a CD/DVD/BluRay reader/player. For example, a Raspberry Pi and a USB-to-IDE or USB-to-SATA plus external drive is fine.
 * CD/DVD/BluRay disk.
 * Some packages installed.  Details are provided for a Debian-based OS (including Ubuntu and Raspberry OS).  Please adjust for other Linux-based distributions.
@@ -40,6 +48,12 @@ pip3 install -e $PWD
 
 ### Launch software
 
+#### Run using bash script
+Opens the GUI from the bioid created by install script virtual environment
+```bash
+bash run.sh
+```
+#### Run Manually
 ```bash
 python3 bioid-gui.py 
 ```
