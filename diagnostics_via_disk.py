@@ -42,6 +42,7 @@ gui = Gui(
     [ HSeparator               , ___                    , ___                    , III         , III       ],
     [ 'Analysis run control:'  , ['analysisStart']      , ['analysisStop']       , III         , III       ],
     [ HSeparator               , ___                    , ___                    , III         , III       ],
+    [ 'Disk type:'             , 'diskType'             , ___                    , III         , III       ],
     [ 'Programmed speed:'      , 'programmedSpeed'      , ___                    , III         , III       ],
     [ 'Disk capacity:'         , 'diskCapacity'         , ___                    , III         , III       ],
     [ 'Sector size:'           , 'sectorSize'           , ___                    , III         , III       ],
@@ -58,6 +59,7 @@ labels = {
     'analysisStart' : 'Start',
     'analysisStop' : 'Stop',
     'programmedSpeed' : '',
+    'diskType' : '',
     'diskCapacity' : '',
     'sectorSize' : '',
     'ortype': 'or type a valid file name below',
@@ -149,6 +151,16 @@ cb_QComboBox()
 
 def cb_analysisStart(gui, *args):
     print("analysisStart")
+
+    global drive
+    try:
+        mode = drive.get_disc_mode()
+    except (cdio.DriverError, OSError):
+        hands_off_the_drive()
+        return
+
+    gui.diskType = mode
+
     com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=" + drive_name ]
 
     logfilename = gui.runID + ".log"
@@ -223,6 +235,8 @@ labelParseRules = {
     "Capacity: (([0-9]+) Blocks = [0-9]+ kBytes = [0-9]+ MBytes = [0-9]+ prMB)" : { 'func' : setCapacity },
     "addr: +([0-9]+)" : { 'func' : updateProgress },
     "Sectorsize: +(.+)$" : { 'func' : updateWidget, 'target' : 'sectorSize',  },
+    "Copy from SCSI .+ disk to file '/dev/null'" : { 'func' : ignore },
+    "^$" : { 'func' : ignore },
     }
 
 labelParseRulesCompiled = {
