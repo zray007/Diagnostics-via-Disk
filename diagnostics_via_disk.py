@@ -128,7 +128,7 @@ def cb_QComboBox(*args):
             drive = None
             drive_name = 'No drive selected'
             cb_refreshDrivesList()
-            pass
+
     print("Selected drive named {!s} object {!r}".format(drive_name, drive))
     enableOrDisableRelevantWidgets()
 
