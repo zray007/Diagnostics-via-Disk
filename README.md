@@ -25,7 +25,7 @@ All this is proof-of-concept level.  It works for us yet the performance might b
 The code is built upon:
 
 * Python
-* Qt (via [qtpy](https://pypi.org/project/QtPy/)) 
+* Qt (via [qtpy](https://pypi.org/project/QtPy/))
 * [pycdio](https://pypi.org/project/pycdio/)
 * [guietta](https://guietta.readthedocs.io/en/latest/).
 * `readom` (from package `wodim`)
@@ -71,7 +71,7 @@ bash run.sh
 ```
 #### Run Manually
 ```bash
-python3 bioid-gui.py 
+python3 bioid-gui.py
 ```
 
 ### Test access to CD-Rom drive
