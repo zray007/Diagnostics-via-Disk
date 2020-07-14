@@ -38,7 +38,7 @@ gui = Gui(
     [ 'CD/DVD drive'           , ['trayOpen']           , ['trayClose']          , III         , III       ],
     [ HSeparator               , ___                    , ___                    , III         , III       ],
     [ ["genIdFromTime"]        , ___                    , 'ortype'               , III         , III       ],
-    [ 'Analysis run ID'        , '__runID__'            , ___                    , III         , III       ],
+    [ 'Analysis run ID:'       , '__runID__'            , ___                    , III         , III       ],
     [ HSeparator               , ___                    , ___                    , III         , III       ],
     [ 'Analysis run control:'  , ['analysisStart']      , ['analysisStop']       , III         , III       ],
     [ HSeparator               , ___                    , ___                    , III         , III       ],
