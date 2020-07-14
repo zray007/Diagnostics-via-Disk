@@ -259,7 +259,7 @@ while True:
     try:
         name, event = gui.get(timeout=0.1)
     except Empty:
-        print("poll")
+        #print("poll")
         if runningAnalysisProcess is not None:
             updateGuiFromProcessLog()
         continue
