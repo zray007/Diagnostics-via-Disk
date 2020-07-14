@@ -4,8 +4,11 @@ from guietta import Empty, Exceptions, P
 import os
 import subprocess
 import re
+import cdio
+import pycdio
 
 from qtpy.QtGui import QFont
+from qtpy.QtWidgets import QComboBox
 
 from time import strftime
 
@@ -31,6 +34,7 @@ driveChooseComboBox = QComboBox()
 gui = Gui(
     [ 'pitch'                  , ___                    , ___                    , VSeparator  , logo_path ],
     [ HSeparator               , ___                    , ___                    , III         , III       ],
+    [ 'Available drives:'      , driveChooseComboBox    , [ 'refreshDrivesList' ], III         , III       ],
     [ 'CD/DVD drive'           , ['trayOpen']           , ['trayClose']          , III         , III       ],
     [ HSeparator               , ___                    , ___                    , III         , III       ],
     [ ["genIdFromTime"]        , ___                    , 'ortype'               , III         , III       ],
@@ -57,12 +61,12 @@ labels = {
     'diskCapacity' : '',
     'sectorSize' : '',
     'ortype': 'or type a valid file name below',
+    'refreshDrivesList' : 'Update list',
     #'instantSpeed' : '',
 }
 
 for id, label in labels.items():
     gui.widgets[id].setText(label)
-
 
 font = QFont( "Arial", 20, QFont.Bold)
 titleWidget = gui.widgets['pitch']
@@ -70,9 +74,68 @@ titleWidget.setFont(font)
 
 gui.widgets['diagnostics_via_disklogo'].setMargin(10)
 
+
+drive = None
+drive_name = None
+
+
 runningAnalysisProcess = None
 logfile_write_descriptor = None
 logfile_read_descriptor = None
+
+
+
+def enableOrDisableRelevantWidgets():
+    running = ( runningAnalysisProcess is not None )
+    gui.widgets['trayOpen'].setEnabled( drive is not None and not running )
+    gui.widgets['trayClose'].setEnabled( drive is not None and not running )
+
+    gui.widgets['analysisStart'].setEnabled( not running )
+    gui.widgets['analysisStop'].setEnabled( running )
+    gui.widgets['analysisProgress'].setEnabled( running )
+    if not running:
+        gui.analysisProgress = 0
+
+enableOrDisableRelevantWidgets()
+
+
+
+err_no_drive='NO DRIVE DETECTED'
+
+def cb_refreshDrivesList(*args):
+    drives = cdio.get_devices(pycdio.DRIVER_UNKNOWN)
+    driveChooseComboBox.clear()
+    if len(drives):
+        driveChooseComboBox.addItems(drives)
+    else:
+        driveChooseComboBox.addItem(err_no_drive)
+
+cb_refreshDrivesList()
+
+def cb_QComboBox(*args):
+    global drive
+    global drive_name
+    selectedName = driveChooseComboBox.currentText()
+    print("Selected drive named {!r}", selectedName)
+    if (selectedName == err_no_drive):
+        drive = None
+        drive_name = selectedName
+    else:
+        try:
+            drive = cdio.Device(selectedName)
+            drive_name = selectedName
+        except OSError:
+            drive = None
+            drive_name = 'No drive selected'
+            cb_refreshDrivesList()
+            pass
+    print("Selected drive named {!s} object {!r}".format(drive_name, drive))
+    enableOrDisableRelevantWidgets()
+
+cb_QComboBox()
+
+
+
 
 # TODO handle case when CD mounted...
 
@@ -105,10 +168,13 @@ def cb_genIdFromTime(gui):
 cb_genIdFromTime(gui);
 
 def cb_trayOpen(gui):
-    os.system("eject cdrom")
+    global drive
+    drive.eject_media()
 
 def cb_trayClose(gui):
-    os.system("eject -t cdrom")
+    global drive_name
+    cdio.close_tray(drive_name)
+
 
 
 #filename = QFileDialog.getOpenFileName(None, "Open File",
@@ -148,18 +214,6 @@ labelParseRules = {
 labelParseRulesCompiled = {
     re.compile(regexpstring) : match_action_info for regexpstring, match_action_info in labelParseRules.items()
 }
-
-def enableOrDisableRelevantWidgets():
-    running = ( runningAnalysisProcess is not None )
-    gui.widgets['analysisStart'].setEnabled( not running )
-    gui.widgets['analysisStop'].setEnabled( running )
-    gui.widgets['trayOpen'].setEnabled( not running )
-    gui.widgets['trayClose'].setEnabled( not running )
-    gui.widgets['analysisProgress'].setEnabled( running )
-    if not running:
-        gui.analysisProgress = 0
-
-enableOrDisableRelevantWidgets()
 
 regexp_to_split_lines = re.compile('\r\n|\r|\n')
 
