@@ -1,11 +1,13 @@
 from guietta import _, Gui, Quit, ___, III, HS, VS, HSeparator, VSeparator, QFileDialog
-from guietta import Empty, Exceptions, P
+from guietta import Empty, Exceptions, P, PG
 
 import os
 import subprocess
 import re
 import cdio
 import pycdio
+import numpy as np
+import math
 
 from qtpy.QtGui import QFont
 from qtpy.QtWidgets import QComboBox
@@ -47,6 +49,7 @@ gui = Gui(
     [ 'Disk capacity:'         , 'diskCapacity'         , ___                    , III         , III       ],
     [ 'Sector size:'           , 'sectorSize'           , ___                    , III         , III       ],
     [ 'Analysis progress'      , P('analysisProgress')  , ___                    , III         , III       ],
+    [ PG('plot') ],
     title= product_name + " - " + pitch.replace('\n'," "),
     exceptions = Exceptions.PRINT
 )
@@ -161,7 +164,17 @@ def cb_analysisStart(gui, *args):
 
     gui.diskType = mode
 
-    com=[ "readom", "-noerror", "-nocorr", "-c2scan", "dev=" + drive_name ]
+    global maxSectorsOnThisDiscTechnology
+    # There are many cases (80 minutes CD, and variations between
+    # DVD+- and DVD-SL DVD-DL).  So far only covering main cases.
+    if re.match(r"DVD", mode):
+        # Source https://en.wikipedia.org/wiki/DVD#Capacity
+        maxSectorsOnThisDiscTechnology = 4171712 # assuming DVD-DL!
+    else:
+        # Source https://en.wikipedia.org/wiki/CD-ROM#Capacity
+        maxSectorsOnThisDiscTechnology = 333000
+
+    com=[ "readom", "-noerror", "-nocorr", "-c2scan", "meshpoints=1000", "dev=" + drive_name ]
 
     logfilename = gui.runID + ".log"
 
@@ -216,11 +229,24 @@ def ignore(match_result, match_action_info):
     print ("Ignoring line: {!r}".format(match_result.string))
 
 diskSectorCount = None
+sectorNumToMillimeter = None
+c2data = None
 
 def setCapacity(match_result, match_action_info):
     gui.diskCapacity = match_result.group(1)
     global diskSectorCount
     diskSectorCount = int ( match_result.group(2) )
+    global c2data
+    print("Initializing c2data with {} elements.".format(diskSectorCount))
+    c2data = np.empty(diskSectorCount)
+    global sectorNumToMillimeter
+    sectorNumToMillimeter = np.empty(diskSectorCount)
+
+    global maxSectorsOnThisDiscTechnology
+    for sector in range(len(sectorNumToMillimeter)):
+        sectorNumToMillimeter[sector] = \
+            math.sqrt( sector / maxSectorsOnThisDiscTechnology \
+                       * (58 * 58 - 25 * 25) + 25 * 25 ) # minor repetition, yet simple and fast
 
 def updateProgress(match_result, match_action_info):
     global diskSectorCount
@@ -229,6 +255,17 @@ def updateProgress(match_result, match_action_info):
     print("{!r} / {!r} = {!r}".format( currentSector, diskSectorCount , percentage ) )
     gui.analysisProgress = percentage
 
+def updateGraphData(match_result, match_action_info):
+    global c2data
+    sectorInError = int ( match_result.group(1) )
+    errorCount = int ( match_result.group(2) )
+    global c2data
+    print("Setting c2data{0} {1}.".format(sectorInError, errorCount))
+    c2data[sectorInError] = errorCount
+
+    gui.plot.setDownsampling(mode='peak')
+    gui.plot.plot(sectorNumToMillimeter, c2data, title="C2 errors", clear=True)
+
 labelParseRules = {
     "Read +speed: +(.+)$" : { 'func' : updateWidget, 'target' : 'programmedSpeed',  },
     "Write +speed: +(.+)$" : { 'func' : ignore },
@@ -236,6 +273,7 @@ labelParseRules = {
     "addr: +([0-9]+)" : { 'func' : updateProgress },
     "Sectorsize: +(.+)$" : { 'func' : updateWidget, 'target' : 'sectorSize',  },
     "Copy from SCSI .+ disk to file '/dev/null'" : { 'func' : ignore },
+    'C2 in sector: ([0-9]+) first at byte:  ([0-9]+) .+ total:   ([0-9]+) errors' : { 'func' : updateGraphData },
     "^$" : { 'func' : ignore },
     }
 
