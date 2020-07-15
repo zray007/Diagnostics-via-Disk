@@ -37,7 +37,7 @@ This is the quickest solution, recommended if you can install everything via pac
 Especially on Raspberry Pi where Debian supplies all necessary packages compiled for the Pi's ARM architecture, while Python-side solutions often lack ARM builds.
 
 ```bash
-install-debian-system_python.sh
+bash install-debian-system_python.sh
 ```
 
 #### Quick install, on Debian and derivatives, using a ad-hoc python virtualenv
@@ -71,7 +71,15 @@ bash run.sh
 ```
 #### Run Manually
 ```bash
-python3 bioid-gui.py
+python3 diagnostics_via_disk.py
+```
+
+#### Quick install & run snippet
+```bash
+git clone https://github.com/zray007/Diagnostics-via-Disk
+cd Diagnostics-via-Disk
+bash install-debian-system_python.sh
+bash run.sh
 ```
 
 ### Test access to CD-Rom drive
