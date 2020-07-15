@@ -1,3 +1,3 @@
 #!/bin/bash
 source env/diagvdisk/bin/activate
-python diagnostics_via_disk.py
+python3 diagnostics_via_disk.py
