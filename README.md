@@ -26,7 +26,7 @@ The code is built upon:
 
 * Python
 * Qt (via [qtpy](https://pypi.org/project/QtPy/))
-* [pycdio](https://pypi.org/project/pycdio/)
+* [pycdio](https://pypi.org/project/pycdio/) | [libcdio2.0.0 for Ubuntu 18.04](https://launchpad.net/~spvkgn/+archive/ubuntu/whipper)
 * [guietta](https://guietta.readthedocs.io/en/latest/).
 * `readom` (from package `wodim`)
 
@@ -65,7 +65,7 @@ That said, you will most certainly need builds of `libcdio` and `libiso9660`, fo
 ### Launch software
 
 #### Run using bash script
-Opens the GUI from the bioid created by install script virtual environment
+Opens the GUI from the diagvdisk virtual environment created by install-debian-virtualenv.sh
 ```bash
 bash run.sh
 ```
