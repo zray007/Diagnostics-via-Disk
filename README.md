@@ -78,8 +78,8 @@ python3 diagnostics_via_disk.py
 ```bash
 git clone https://github.com/zray007/Diagnostics-via-Disk
 cd Diagnostics-via-Disk
-bash install-debian-system_python.sh
-bash run.sh
+sudo bash install-debian-system_python.sh
+sudo bash run.sh
 ```
 
 ### Test access to CD-Rom drive
